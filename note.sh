@@ -1,8 +1,9 @@
 #!/bin/bash
 
 backup_notes() {
-    cp notes.txt "notes_backup_$(date +%Y%m%d_%H%M%S).txt"
+    cp "$1" "notes/backup_$(basename "$1")_$(date +%Y%m%d_%H%M%S).txt"
 }
+
 
 # Colors
 RED="\e[31m"
@@ -12,6 +13,24 @@ BLUE="\e[34m"
 MAGENTA="\e[35m"
 CYAN="\e[36m"
 RESET="\e[0m"
+
+mkdir -p notes
+
+choose_category() {
+    echo -e "${CYAN}Choose a category:${RESET}"
+    echo -e "${YELLOW}1.${RESET} Work"
+    echo -e "${YELLOW}2.${RESET} Personal"
+    echo -e "${YELLOW}3.${RESET} Journal"
+    read -p "Enter choice [1-3]: " cat_choice
+
+    case $cat_choice in
+        1) category="work.txt" ;;
+        2) category="personal.txt" ;;
+        3) category="journal.txt" ;;
+        *) echo -e "${RED}Invalid choice.${RESET}"; return 1 ;;
+    esac
+    filepath="notes/$category"
+}
 
 
 while true; do
@@ -29,24 +48,30 @@ echo -e "${YELLOW}6.${RESET} Exit"
     read -p "Enter choice [1-6]: " choice
 
     case $choice in
+        
         1)
-            echo "Write your note below (press CTRL+D when done):"
-            echo "-----Note taken on $(date) -----" >> notes.txt
-            cat >> notes.txt
-            echo -e "${GREEN}Note saved!${RESET}"
-
-            ;;
-        2)
-            echo "Here are your notes:"
-            nl notes.txt
-            ;;
-        3)
-    read -p "Enter the note number to delete: " num
-    backup_notes
-    sed -i "${num}d" notes.txt
-    echo -e "${GREEN}Note #$num deleted (backup created).${RESET}"
-
+    choose_category || continue
+    echo "Write your note below (press CTRL+D when done):"
+    echo "----- Note taken on $(date) -----" >> "$filepath"
+    cat >> "$filepath"
+    echo "" >> "$filepath"
+    echo -e "${GREEN}Note saved to $filepath!${RESET}"
     ;;
+
+        2)
+    choose_category || continue
+    echo -e "${MAGENTA}Here are your notes in $filepath:${RESET}"
+    nl "$filepath"
+    ;;
+
+        3)
+    choose_category || continue
+    read -p "Enter the note number to delete: " num
+    backup_notes "$filepath"
+    sed -i "${num}d" "$filepath"
+    echo -e "${GREEN}Note #$num deleted from $filepath (backup created).${RESET}"
+    ;;
+
 
         4)
     read -p "Enter keyword to search: " keyword
