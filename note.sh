@@ -1,5 +1,10 @@
 #!/bin/bash
 
+backup_notes() {
+    cp notes.txt "notes_backup_$(date +%Y%m%d_%H%M%S).txt"
+}
+
+
 while true; do
     echo ""
     echo "What would you like to do?"
@@ -24,10 +29,12 @@ echo "6. Exit"
             nl notes.txt
             ;;
         3)
-            read -p "Enter the note number to delete: " num
-            sed -i "${num}d" notes.txt
-            echo "Note #$num deleted."
-            ;;
+    read -p "Enter the note number to delete: " num
+    backup_notes
+    sed -i "${num}d" notes.txt
+    echo "Note #$num deleted (backup created)."
+    ;;
+
         4)
     read -p "Enter keyword to search: " keyword
     echo "Search results for '$keyword':"
@@ -39,9 +46,11 @@ echo "6. Exit"
     current=$(sed -n "${num}p" notes.txt)
     echo "Current line: $current"
     read -p "Enter new content: " new
+    backup_notes
     sed -i "${num}s/.*/$new/" notes.txt
-    echo "Line #$num updated."
+    echo "Line #$num updated (backup created)."
     ;;
+
  
        6) 
             echo "Goodbye!"
