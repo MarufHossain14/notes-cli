@@ -42,10 +42,12 @@ echo -e "${YELLOW}2.${RESET} List notes"
 echo -e "${YELLOW}3.${RESET} Delete a note"
 echo -e "${YELLOW}4.${RESET} Search notes"
 echo -e "${YELLOW}5.${RESET} Edit a note"
-echo -e "${YELLOW}6.${RESET} Exit"
+echo -e "${YELLOW}6.${RESET} Daily Journal (auto-date)"
+echo -e "${YELLOW}7.${RESET} Exit"
 
 
-    read -p "Enter choice [1-6]: " choice
+
+    read -p "Enter choice [1-7]: " choice
 
     case $choice in
         
@@ -90,11 +92,22 @@ echo -e "${YELLOW}6.${RESET} Exit"
 
     ;;
 
- 
-       6) 
-            echo "Goodbye!"
-            break
-            ;;
+       6)
+    today=$(date +%Y-%m-%d)
+    filepath="notes/journal-$today.txt"
+
+    echo -e "${CYAN}Writing to journal: $filepath${RESET}"
+    echo "----- Journal entry on $(date) -----" >> "$filepath"
+    cat >> "$filepath"
+    echo "" >> "$filepath"
+    echo -e "${GREEN}Entry saved to $filepath${RESET}"
+    ;;
+
+        7)
+    echo -e "${MAGENTA}Goodbye!${RESET}"
+    break
+    ;;
+
         *)
             echo "Invalid option. Try again."
             ;;
