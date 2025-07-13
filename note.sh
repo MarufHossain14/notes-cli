@@ -1,10 +1,36 @@
 #!/bin/bash
 
-if [ "$1" == "list" ]; then
-    echo "Here are your notes:"
-    nl notes.txt
-else
-    echo "Write your note below (press CTRL+D when done):"
-    cat >> notes.txt
-    echo "Your note has been saved!"
-fi
+while true; do
+    echo ""
+    echo "What would you like to do?"
+    echo "1. Add a note"
+    echo "2. List notes"
+    echo "3. Delete a note"
+    echo "4. Exit"
+    read -p "Enter choice [1-4]: " choice
+
+    case $choice in
+        1)
+            echo "Write your note below (press CTRL+D when done):"
+            echo "-----Note taken on $(date) -----" >> notes.txt
+            cat >> notes.txt
+            echo "Note saved!"
+            ;;
+        2)
+            echo "Here are your notes:"
+            nl notes.txt
+            ;;
+        3)
+            read -p "Enter the note number to delete: " num
+            sed -i "${num}d" notes.txt
+            echo "Note #$num deleted."
+            ;;
+        4)
+            echo "Goodbye!"
+            break
+            ;;
+        *)
+            echo "Invalid option. Try again."
+            ;;
+    esac
+done
