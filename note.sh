@@ -4,11 +4,13 @@ while true; do
     echo ""
     echo "What would you like to do?"
     echo "1. Add a note"
-    echo "2. List notes"
-    echo "3. Delete a note"
-    echo "4. Search notes"
-    echo "5. Exit"
-    read -p "Enter choice [1-5]: " choice
+echo "2. List notes"
+echo "3. Delete a note"
+echo "4. Search notes"
+echo "5. Edit a note"
+echo "6. Exit"
+
+    read -p "Enter choice [1-6]: " choice
 
     case $choice in
         1)
@@ -32,7 +34,16 @@ while true; do
     grep --color=always -i "$keyword" notes.txt || echo "No matches found."
     ;;
 
-        5) 
+       5)
+    read -p "Enter the note number to edit: " num
+    current=$(sed -n "${num}p" notes.txt)
+    echo "Current line: $current"
+    read -p "Enter new content: " new
+    sed -i "${num}s/.*/$new/" notes.txt
+    echo "Line #$num updated."
+    ;;
+ 
+       6) 
             echo "Goodbye!"
             break
             ;;
