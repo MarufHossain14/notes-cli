@@ -6,8 +6,9 @@ while true; do
     echo "1. Add a note"
     echo "2. List notes"
     echo "3. Delete a note"
-    echo "4. Exit"
-    read -p "Enter choice [1-4]: " choice
+    echo "4. Search notes"
+    echo "5. Exit"
+    read -p "Enter choice [1-5]: " choice
 
     case $choice in
         1)
@@ -26,6 +27,12 @@ while true; do
             echo "Note #$num deleted."
             ;;
         4)
+    read -p "Enter keyword to search: " keyword
+    echo "Search results for '$keyword':"
+    grep --color=always -i "$keyword" notes.txt || echo "No matches found."
+    ;;
+
+        5) 
             echo "Goodbye!"
             break
             ;;
