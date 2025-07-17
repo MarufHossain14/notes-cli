@@ -1,11 +1,11 @@
 #!/bin/bash
 
+# === Function to create a timestamped backup of the given note file ===
 backup_notes() {
     cp "$1" "notes/backup_$(basename "$1")_$(date +%Y%m%d_%H%M%S).txt"
 }
 
-
-# Colors
+# === Color Codes for Terminal Output ===
 RED="\e[31m"
 GREEN="\e[32m"
 YELLOW="\e[33m"
@@ -14,8 +14,10 @@ MAGENTA="\e[35m"
 CYAN="\e[36m"
 RESET="\e[0m"
 
+# === Create the notes directory if it doesn't exist ===
 mkdir -p notes
 
+# === Function to choose a note category and set the file path ===
 choose_category() {
     echo -e "${CYAN}Choose a category:${RESET}"
     echo -e "${YELLOW}1.${RESET} Work"
@@ -29,87 +31,81 @@ choose_category() {
         3) category="journal.txt" ;;
         *) echo -e "${RED}Invalid choice.${RESET}"; return 1 ;;
     esac
+
     filepath="notes/$category"
 }
 
-
+# === Main Program Loop ===
 while true; do
     echo ""
-    echo "What would you like to do?"
     echo -e "${CYAN}What would you like to do?${RESET}"
-echo -e "${YELLOW}1.${RESET} Add a note"
-echo -e "${YELLOW}2.${RESET} List notes"
-echo -e "${YELLOW}3.${RESET} Delete a note"
-echo -e "${YELLOW}4.${RESET} Search notes"
-echo -e "${YELLOW}5.${RESET} Edit a note"
-echo -e "${YELLOW}6.${RESET} Daily Journal (auto-date)"
-echo -e "${YELLOW}7.${RESET} Exit"
-
-
-
+    echo -e "${YELLOW}1.${RESET} Add a note"
+    echo -e "${YELLOW}2.${RESET} List notes"
+    echo -e "${YELLOW}3.${RESET} Delete a note"
+    echo -e "${YELLOW}4.${RESET} Search notes"
+    echo -e "${YELLOW}5.${RESET} Edit a note"
+    echo -e "${YELLOW}6.${RESET} Daily Journal (auto-date)"
+    echo -e "${YELLOW}7.${RESET} Exit"
     read -p "Enter choice [1-7]: " choice
 
     case $choice in
-        
         1)
-    choose_category || continue
-    echo "Write your note below (press CTRL+D when done):"
-    echo "----- Note taken on $(date) -----" >> "$filepath"
-    cat >> "$filepath"
-    echo "" >> "$filepath"
-    echo -e "${GREEN}Note saved to $filepath!${RESET}"
-    ;;
-
+            choose_category || continue
+            echo "Write your note below (press CTRL+D when done):"
+            echo "----- Note taken on $(date) -----" >> "$filepath"
+            cat >> "$filepath"
+            echo "" >> "$filepath"
+            echo -e "${GREEN}Note saved to $filepath!${RESET}"
+            ;;
+        
         2)
-    choose_category || continue
-    echo -e "${MAGENTA}Here are your notes in $filepath:${RESET}"
-    nl "$filepath"
-    ;;
+            choose_category || continue
+            echo -e "${MAGENTA}Here are your notes in $filepath:${RESET}"
+            nl "$filepath"
+            ;;
 
         3)
-    choose_category || continue
-    read -p "Enter the note number to delete: " num
-    backup_notes "$filepath"
-    sed -i "${num}d" "$filepath"
-    echo -e "${GREEN}Note #$num deleted from $filepath (backup created).${RESET}"
-    ;;
-
+            choose_category || continue
+            read -p "Enter the note number to delete: " num
+            backup_notes "$filepath"
+            sed -i "${num}d" "$filepath"
+            echo -e "${GREEN}Note #$num deleted from $filepath (backup created).${RESET}"
+            ;;
 
         4)
-    read -p "Enter keyword to search: " keyword
-    echo -e "${MAGENTA}Search results for '$keyword':${RESET}"
-    grep --color=always -i "$keyword" notes.txt || echo "No matches found."
-    ;;
+            read -p "Enter keyword to search: " keyword
+            echo -e "${MAGENTA}Search results for '$keyword':${RESET}"
+            grep --color=always -i "$keyword" notes/*.txt || echo "No matches found."
+            ;;
 
-       5)
-    read -p "Enter the note number to edit: " num
-    current=$(sed -n "${num}p" notes.txt)
-    echo "Current line: $current"
-    read -p "Enter new content: " new
-    backup_notes
-    sed -i "${num}s/.*/$new/" notes.txt
-    echo -e "${GREEN}Line #$num updated (backup created).${RESET}"
+        5)
+            choose_category || continue
+            read -p "Enter the note number to edit: " num
+            current=$(sed -n "${num}p" "$filepath")
+            echo "Current line: $current"
+            read -p "Enter new content: " new
+            backup_notes "$filepath"
+            sed -i "${num}s/.*/$new/" "$filepath"
+            echo -e "${GREEN}Line #$num updated in $filepath (backup created).${RESET}"
+            ;;
 
-    ;;
-
-       6)
-    today=$(date +%Y-%m-%d)
-    filepath="notes/journal-$today.txt"
-
-    echo -e "${CYAN}Writing to journal: $filepath${RESET}"
-    echo "----- Journal entry on $(date) -----" >> "$filepath"
-    cat >> "$filepath"
-    echo "" >> "$filepath"
-    echo -e "${GREEN}Entry saved to $filepath${RESET}"
-    ;;
+        6)
+            today=$(date +%Y-%m-%d)
+            filepath="notes/journal-$today.txt"
+            echo -e "${CYAN}Writing to journal: $filepath${RESET}"
+            echo "----- Journal entry on $(date) -----" >> "$filepath"
+            cat >> "$filepath"
+            echo "" >> "$filepath"
+            echo -e "${GREEN}Entry saved to $filepath${RESET}"
+            ;;
 
         7)
-    echo -e "${MAGENTA}Goodbye!${RESET}"
-    break
-    ;;
+            echo -e "${MAGENTA}Goodbye!${RESET}"
+            break
+            ;;
 
         *)
-            echo "Invalid option. Try again."
+            echo -e "${RED}Invalid option. Try again.${RESET}"
             ;;
     esac
 done
