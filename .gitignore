@@ -1,0 +1,44 @@
+# Notes CLI - Git Ignore
+
+# User notes and data (should not be in repo)
+notes/
+*.txt
+*.gpg
+backup_*
+reminders.txt
+
+# User configuration
+~/.notesrc
+.notesrc
+
+# Temporary files
+*.tmp
+*.temp
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+
+# Backup files
+*.bak
+*.backup
+
+# Test directories (if any)
+test/
+tests/
