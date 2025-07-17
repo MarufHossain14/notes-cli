@@ -1,0 +1,35 @@
+# Notes CLI Configuration File
+# Copy this to ~/.notesrc to customize your settings
+
+# === Theme Options ===
+# Available themes: default, solarized, gruvbox, dracula
+THEME="default"
+
+# === Editor Settings ===
+# Set your preferred text editor
+EDITOR="nano"
+
+# === Directory Settings ===
+# Where to store your notes (default: ~/notes)
+NOTES_DIR="$HOME/notes"
+
+# === Security Settings ===
+# Set your GPG email for encryption features
+# Leave empty to disable encryption
+GPG_USER=""
+
+# === Sync Settings ===
+# Enable automatic sync after operations
+AUTO_SYNC=false
+
+# === Backup Settings ===
+# How many days to keep backups
+BACKUP_RETENTION_DAYS=7
+
+# === Plugin Settings ===
+# Directory for custom plugins
+PLUGINS_DIR="$(dirname "$0")/.notes_plugins"
+
+# === Categories ===
+# Custom categories will be added to the default list
+# DEFAULT_CATEGORIES=("Work" "Personal" "Journal" "Ideas" "Tasks")
