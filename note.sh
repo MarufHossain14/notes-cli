@@ -1,4 +1,5 @@
 #!/bin/bash
+find notes/backup_* -mtime +7 -exec rm {} \;
 
 # === Function to create a timestamped backup of the given note file ===
 backup_notes() {
@@ -47,9 +48,12 @@ while true; do
     echo -e "${YELLOW}6.${RESET} Edit a note"
     echo -e "${YELLOW}7.${RESET} Daily Journal (auto-date)"
     echo -e "${YELLOW}8.${RESET} Filter notes by tag"
-    echo -e "${YELLOW}9.${RESET} Exit"
-    read -p "Enter choice [1-9]: " choice
-
+    echo -e "${YELLOW}9.${RESET} Export notes to Markdown"
+    echo -e "${YELLOW}10.${RESET} List backups"
+    echo -e "${YELLOW}11.${RESET} Restore backup"
+    echo -e "${YELLOW}12.${RESET} Exit"
+    read -p "Enter choice [1-12]: " choice
+    
     
     case $choice in
         1)
@@ -133,6 +137,41 @@ while true; do
         ;;
         
         9)
+            choose_category || continue
+            export_file="notes/exported_$(basename "$filepath" .txt)_$(date +%Y%m%d_%H%M%S).md"
+            
+            echo -e "${CYAN}Exporting $filepath to $export_file${RESET}"
+            
+            # For simplicity, just copy and add Markdown header
+            {
+                echo "# Notes from $(basename "$filepath")"
+                echo ""
+                cat "$filepath"
+            } > "$export_file"
+            
+            echo -e "${GREEN}Exported notes saved to $export_file${RESET}"
+        ;;
+        10)
+            echo -e "${CYAN}Backups available:${RESET}"
+            ls -1 notes/backup_* || echo "No backups found."
+            read -p "Press enter to return to menu"
+        ;;
+
+        11)
+            echo -e "${CYAN}Choose backup file to restore:${RESET}"
+            backup_file=$(ls notes/backup_* | fzf)
+            if [[ -z "$backup_file" ]]; then
+                echo -e "${RED}No backup selected.${RESET}"
+                continue
+            fi
+            
+            original_file="notes/$(echo "$backup_file" | sed -r 's/backup_(.*)_[0-9]+\.txt/\1/')"
+            cp "$backup_file" "$original_file"
+            echo -e "${GREEN}Backup restored to $original_file${RESET}"
+            read -p "Press enter to return to menu"
+        ;;
+        
+        12)
             echo -e "${MAGENTA}Goodbye!${RESET}"
             break
         ;;
