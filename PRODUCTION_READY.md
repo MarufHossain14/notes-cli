@@ -1,4 +1,4 @@
-# 🚀 Production Ready - Notes CLI
+# Notes CLI
 
 ## What Was Improved
 

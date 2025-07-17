@@ -1,4 +1,4 @@
-# 📝 Notes CLI - Production Ready
+# 📝 Notes CLI
 
 A powerful, feature-rich terminal-based note-taking application with encryption, backup, sync, and plugin support. Perfect for personal use and sharing with friends.
 

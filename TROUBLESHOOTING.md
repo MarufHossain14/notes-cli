@@ -12,14 +12,19 @@ Solutions for common installation and usage issues.
 
 **Solutions:**
 
-#### Option 1: Fix in WSL/Linux
+#### Option 1: Fix in WSL/Linux (Recommended)
 
 ```bash
-# Remove Windows line endings
-sed -i 's/\r$//' install.sh
-sed -i 's/\r$//' notes.sh
-chmod +x install.sh
-chmod +x notes.sh
+# Remove Windows line endings from all scripts
+sed -i 's/\r$//' *.sh
+sed -i 's/\r$//' .notes_plugins/*.sh
+
+# Make scripts executable
+chmod +x *.sh
+chmod +x .notes_plugins/*.sh
+
+# Try installation again
+bash install.sh
 ```
 
 #### Option 2: Fix in Git Bash
@@ -31,12 +36,28 @@ git add .
 git commit -m "Fix line endings"
 ```
 
-#### Option 3: Manual Fix
+#### Option 2: Use the clean installer
+
+```bash
+# If the main installer fails, use the simplified version
+bash install_clean.sh
+```
+
+#### Option 3: Fix in Git Bash
+
+```bash
+# Configure Git to handle line endings
+git config core.autocrlf false
+git add .
+git commit -m "Fix line endings"
+```
+
+#### Option 4: Manual Fix
 
 ```bash
 # Use dos2unix (install if needed)
-dos2unix install.sh
-dos2unix notes.sh
+dos2unix *.sh
+dos2unix .notes_plugins/*.sh
 ```
 
 ### **Error: `Permission denied`**
