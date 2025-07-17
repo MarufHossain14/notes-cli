@@ -43,10 +43,11 @@ while true; do
     echo -e "${YELLOW}2.${RESET} List notes"
     echo -e "${YELLOW}3.${RESET} Delete a note"
     echo -e "${YELLOW}4.${RESET} Search notes"
-    echo -e "${YELLOW}5.${RESET} Edit a note"
-    echo -e "${YELLOW}6.${RESET} Daily Journal (auto-date)"
-    echo -e "${YELLOW}7.${RESET} Exit"
-    read -p "Enter choice [1-7]: " choice
+    echo -e "${YELLOW}5.${RESET} Fuzzy search & view notes"
+    echo -e "${YELLOW}6.${RESET} Edit a note"
+    echo -e "${YELLOW}7.${RESET} Daily Journal (auto-date)"
+    echo -e "${YELLOW}8.${RESET} Exit"
+    read -p "Enter choice [1-8]: " choice
 
     case $choice in
         1)
@@ -56,13 +57,17 @@ while true; do
             cat >> "$filepath"
             echo "" >> "$filepath"
             echo -e "${GREEN}Note saved to $filepath!${RESET}"
-            ;;
-        
+        ;;
+
         2)
             choose_category || continue
             echo -e "${MAGENTA}Here are your notes in $filepath:${RESET}"
-            nl "$filepath"
-            ;;
+            if [ ! -s "$filepath" ]; then
+                echo -e "${YELLOW}(No notes found in $filepath)${RESET}"
+            else
+                nl "$filepath"
+            fi
+        ;;
 
         3)
             choose_category || continue
@@ -70,15 +75,34 @@ while true; do
             backup_notes "$filepath"
             sed -i "${num}d" "$filepath"
             echo -e "${GREEN}Note #$num deleted from $filepath (backup created).${RESET}"
-            ;;
+        ;;
 
         4)
             read -p "Enter keyword to search: " keyword
             echo -e "${MAGENTA}Search results for '$keyword':${RESET}"
-            grep --color=always -i "$keyword" notes/*.txt || echo "No matches found."
-            ;;
+            grep --color=always -i "$keyword" notes/*.txt || echo -e "${YELLOW}No matches found.${RESET}"
+        ;;
 
         5)
+            if ! command -v fzf &>/dev/null; then
+                echo -e "${RED}fzf not installed. Run: sudo apt install fzf${RESET}"
+                continue
+            fi
+
+            SELECTED_FILE=$(find notes/ -type f | fzf)
+
+            if [ -n "$SELECTED_FILE" ]; then
+                clear
+                echo -e "${GREEN}--- Viewing: $SELECTED_FILE ---${RESET}"
+                cat "$SELECTED_FILE"
+                echo ""
+                read -p "Press enter to return to menu"
+            else
+                echo -e "${RED}No file selected.${RESET}"
+            fi
+        ;;
+
+        6)
             choose_category || continue
             read -p "Enter the note number to edit: " num
             current=$(sed -n "${num}p" "$filepath")
@@ -87,9 +111,9 @@ while true; do
             backup_notes "$filepath"
             sed -i "${num}s/.*/$new/" "$filepath"
             echo -e "${GREEN}Line #$num updated in $filepath (backup created).${RESET}"
-            ;;
+        ;;
 
-        6)
+        7)
             today=$(date +%Y-%m-%d)
             filepath="notes/journal-$today.txt"
             echo -e "${CYAN}Writing to journal: $filepath${RESET}"
@@ -97,15 +121,15 @@ while true; do
             cat >> "$filepath"
             echo "" >> "$filepath"
             echo -e "${GREEN}Entry saved to $filepath${RESET}"
-            ;;
+        ;;
 
-        7)
+        8)
             echo -e "${MAGENTA}Goodbye!${RESET}"
             break
-            ;;
+        ;;
 
         *)
             echo -e "${RED}Invalid option. Try again.${RESET}"
-            ;;
+        ;;
     esac
 done
