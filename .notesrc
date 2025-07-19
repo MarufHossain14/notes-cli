@@ -2,8 +2,8 @@
 # Copy this to ~/.notesrc to customize your settings
 
 # === Theme Options ===
-# Available themes: default, solarized, gruvbox, dracula
-THEME="default"
+# Available themes: default, minimal, solarized, gruvbox, dracula
+THEME="minimal"
 
 # === Editor Settings ===
 # Set your preferred text editor

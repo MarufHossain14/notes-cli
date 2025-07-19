@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env bash
+#!/usr/bin/bash
 set -euo pipefail
 
 # === Colors ===
@@ -65,16 +65,16 @@ install_dependencies() {
                 step "Installing dependencies on Ubuntu/Debian..."
                 sudo apt-get update
                 sudo apt-get install -y fzf gpg git
-            elif command -v yum &>/dev/null; then
+                elif command -v yum &>/dev/null; then
                 step "Installing dependencies on CentOS/RHEL..."
                 sudo yum install -y fzf gnupg git
-            elif command -v pacman &>/dev/null; then
+                elif command -v pacman &>/dev/null; then
                 step "Installing dependencies on Arch Linux..."
                 sudo pacman -S --noconfirm fzf gnupg git
             else
                 warning "Package manager not detected. Please install fzf, gpg, and git manually."
             fi
-            ;;
+        ;;
         macos)
             if command -v brew &>/dev/null; then
                 step "Installing dependencies on macOS..."
@@ -83,7 +83,7 @@ install_dependencies() {
                 warning "Homebrew not found. Please install it first: https://brew.sh"
                 warning "Then run: brew install fzf gnupg git"
             fi
-            ;;
+        ;;
         windows)
             if command -v choco &>/dev/null; then
                 step "Installing dependencies on Windows..."
@@ -92,16 +92,16 @@ install_dependencies() {
                 warning "Chocolatey not found. Please install it first: https://chocolatey.org"
                 warning "Then run: choco install fzf gnupg git"
             fi
-            ;;
+        ;;
         *)
             warning "Unknown OS. Please install fzf, gpg, and git manually."
-            ;;
+        ;;
     esac
 }
 
 # === Main Installation ===
 main() {
-    echo -e "${BLUE}📝 Notes CLI Installer${RESET}"
+    echo -e "${BLUE}?? Notes CLI Installer${RESET}"
     echo "================================"
     
     # Get script directory
@@ -161,7 +161,7 @@ main() {
     
     # Success message
     echo
-    echo -e "${GREEN}✅ Installation completed successfully!${RESET}"
+    echo -e "${GREEN}? Installation completed successfully!${RESET}"
     echo
     echo "Next steps:"
     echo "1. Restart your terminal or run: source ~/.bashrc"

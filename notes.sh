@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/bash
 set -euo pipefail
 IFS=$'\n\t'
 
@@ -14,7 +14,7 @@ DEFAULT_CONFIG_FILE="$(dirname "$0")/.notesrc"
 # Load user config if exists, otherwise create from default
 if [[ -f "$CONFIG_FILE" ]]; then
     source "$CONFIG_FILE"
-elif [[ -f "$DEFAULT_CONFIG_FILE" ]]; then
+    elif [[ -f "$DEFAULT_CONFIG_FILE" ]]; then
     cp "$DEFAULT_CONFIG_FILE" "$CONFIG_FILE"
     source "$CONFIG_FILE"
 fi
@@ -26,7 +26,7 @@ NOTES_DIR="${NOTES_DIR:-$HOME/notes}"
 PRIVATE_DIR="$NOTES_DIR/private"
 BACKUP_RETENTION_DAYS="${BACKUP_RETENTION_DAYS:-7}"
 DEFAULT_CATEGORIES=("Work" "Personal" "Journal" "Ideas" "Tasks")
-THEME="${THEME:-default}"
+THEME="${THEME:-minimal}"
 AUTO_SYNC="${AUTO_SYNC:-false}"
 PLUGINS_DIR="${PLUGINS_DIR:-$(dirname "$0")/.notes_plugins}"
 
@@ -62,22 +62,31 @@ validate_environment() {
 # === Themes ===
 set_theme() {
     case "$THEME" in
+        minimal)
+            RED="\e[91m"; GREEN="\e[92m"; YELLOW="\e[93m"
+            BLUE="\e[96m"; MAGENTA="\e[95m"; CYAN="\e[94m";
+            GRAY="\e[90m"; RESET="\e[0m"
+        ;;
         solarized)
             RED="\e[31m"; GREEN="\e[32m"; YELLOW="\e[33m"
-            BLUE="\e[34m"; MAGENTA="\e[35m"; CYAN="\e[36m"; RESET="\e[0m"
-            ;;
+            BLUE="\e[34m"; MAGENTA="\e[35m"; CYAN="\e[36m";
+            GRAY="\e[90m"; RESET="\e[0m"
+        ;;
         gruvbox)
             RED="\e[91m"; GREEN="\e[92m"; YELLOW="\e[93m"
-            BLUE="\e[94m"; MAGENTA="\e[95m"; CYAN="\e[96m"; RESET="\e[0m"
-            ;;
+            BLUE="\e[94m"; MAGENTA="\e[95m"; CYAN="\e[96m";
+            GRAY="\e[90m"; RESET="\e[0m"
+        ;;
         dracula)
             RED="\e[38;5;203m"; GREEN="\e[38;5;84m"; YELLOW="\e[38;5;227m"
-            BLUE="\e[38;5;68m"; MAGENTA="\e[38;5;141m"; CYAN="\e[38;5;86m"; RESET="\e[0m"
-            ;;
+            BLUE="\e[38;5;68m"; MAGENTA="\e[38;5;141m"; CYAN="\e[38;5;86m";
+            GRAY="\e[38;5;240m"; RESET="\e[0m"
+        ;;
         *)
             RED="\e[31m"; GREEN="\e[32m"; YELLOW="\e[33m"
-            BLUE="\e[34m"; MAGENTA="\e[35m"; CYAN="\e[36m"; RESET="\e[0m"
-            ;;
+            BLUE="\e[34m"; MAGENTA="\e[35m"; CYAN="\e[36m";
+            GRAY="\e[90m"; RESET="\e[0m"
+        ;;
     esac
 }
 
@@ -124,7 +133,7 @@ choose_category() {
     if [[ $cat_choice =~ ^[1-9][0-9]*$ ]] && (( cat_choice >= 1 && cat_choice <= ${#DEFAULT_CATEGORIES[@]} )); then
         local selected="${DEFAULT_CATEGORIES[$((cat_choice - 1))]}"
         filepath="$NOTES_DIR/$(echo "$selected" | tr '[:upper:]' '[:lower:]').txt"
-    elif (( cat_choice == ${#DEFAULT_CATEGORIES[@]} + 1 )); then
+        elif (( cat_choice == ${#DEFAULT_CATEGORIES[@]} + 1 )); then
         read -rp "Enter custom category name: " custom_cat
         local safe_name=$(safe_filename "$custom_cat")
         filepath="$NOTES_DIR/${safe_name}.txt"
@@ -143,7 +152,7 @@ run_plugins() {
         for plugin in "$PLUGINS_DIR"/*.sh; do
             if [[ -f "$plugin" && -x "$plugin" ]]; then
                 "$plugin" "$@"
-            elif [[ -f "$plugin" ]]; then
+                elif [[ -f "$plugin" ]]; then
                 bash "$plugin" "$@"
             fi
         done
@@ -319,7 +328,7 @@ export_markdown() {
 }
 
 list_backups() {
-    local backups=( "$NOTES_DIR"/backup_* 2>/dev/null )
+    local backups=( "$NOTES_DIR"/backup_* )
     if [[ ${#backups[@]} -eq 0 ]] || [[ ! -f "${backups[0]}" ]]; then
         echo -e "${YELLOW}No backups found.${RESET}"
         return
@@ -489,48 +498,50 @@ dashboard() {
 
 show_help() {
     cat <<EOF
-📝 Notes CLI v$VERSION - A production-ready terminal notes manager
+📝 Notes CLI - Simple note management
 
-USAGE:
-  notes <command> [options]
+Quick Commands:
+  notes           Interactive menu (easiest way)
+  notes add       Add a new note
+  notes list      View your notes
+  notes journal   Today's journal entry
+  notes search    Find notes
 
-COMMANDS:
-  add         Add a new note (select category)
-  list        List all notes in a category
-  delete      Delete a note by number
-  edit        Edit a note by number
-  journal     Add to today's journal
-  search      Search all notes by keyword
-  fuzzy       Fuzzy find and view notes (requires fzf)
-  tag         Filter notes by tag (e.g. #work)
-  export      Export notes to Markdown
-  backups     List all backup files
-  restore     Restore from backup (requires fzf)
-  external    Open notes in your \$EDITOR
-  encrypt     Create an encrypted note (requires GPG)
-  decrypt     View an encrypted note (requires GPG)
-  sync        Commit and push notes to Git
-  dashboard   Show daily summary and stats
-  plugins     Run all installed plugins
-  config      Show current configuration
-  help        Show this help message
+Other Commands:
+  edit, delete, export, sync, config
 
-EXAMPLES:
-  notes add                    # Add a note
-  notes journal                # Write today's journal
-  notes search "meeting"       # Search for "meeting"
-  notes encrypt                # Create encrypted note
-  notes sync                   # Sync to Git
-  notes dashboard              # Show daily summary
+Tips:
+  • Just type 'notes' for an interactive menu
+  • Use 'notes config' to customize settings
+  • Type 'notes menu' for full command list
+EOF
+}
 
-CONFIGURATION:
-  Edit ~/.notesrc to customize settings
-  Set GPG_USER for encryption features
-  Configure Git remote for sync
+show_menu() {
+    cat <<EOF
+📝 Notes CLI v$VERSION
 
-REQUIREMENTS:
-  Required: bash, grep, sed, date
-  Optional: fzf (for fuzzy search), gpg (for encryption), git (for sync)
+CORE COMMANDS:
+  add         Add a new note
+  list        List notes by category
+  journal     Today's journal entry
+  search      Search all notes
+  edit        Edit existing note
+  delete      Delete a note
+
+ADVANCED:
+  fuzzy       Fuzzy search (requires fzf)
+  tag         Filter by tags (#work)
+  encrypt     Encrypted notes (requires GPG)
+  sync        Git sync
+  export      Export to Markdown
+  dashboard   Daily summary
+
+UTILITIES:
+  config      Show settings
+  backups     List backups
+  plugins     Run plugins
+  help        Quick help
 EOF
 }
 
@@ -553,11 +564,77 @@ show_config() {
     echo "========================================"
 }
 
+show_interactive_menu() {
+    while true; do
+        clear
+        show_menu
+        echo ""
+        echo "What would you like to do?"
+        echo "(Type a command or 'q' to quit)"
+        echo -n "> "
+        
+        read -r choice
+        
+        case "$choice" in
+            q|quit|exit)
+                echo "Goodbye!"
+                exit 0
+            ;;
+            add|a) add_note ;;
+            list|l) list_notes ;;
+            journal|j) journal_today ;;
+            search|s)
+                echo -n "Search for: "
+                read -r term
+                search_notes "$term"
+            ;;
+            edit|e) edit_note ;;
+            delete|d) delete_note ;;
+            fuzzy|f) fuzzy_view ;;
+            tag|t)
+                echo -n "Tag to filter: "
+                read -r tag
+                tag_filter "$tag"
+            ;;
+            encrypt) encrypt_note ;;
+            sync) sync_notes ;;
+            export) export_markdown ;;
+            dashboard) dashboard ;;
+            config|c) show_config; pause ;;
+            backups|b) list_backups ;;
+            plugins|p) run_plugins ;;
+            help|h) show_help; pause ;;
+            menu|m) continue ;;
+            "")
+                echo "Please enter a command"
+                sleep 1
+            ;;
+            *)
+                echo "Unknown command: $choice"
+                echo "Type 'help' to see available commands"
+                sleep 2
+            ;;
+        esac
+        
+        if [[ "$choice" != "config" && "$choice" != "c" && "$choice" != "help" && "$choice" != "h" && "$choice" != "menu" && "$choice" != "m" && "$choice" != "" ]]; then
+            echo ""
+            echo "Press Enter to continue..."
+            read -r
+        fi
+    done
+}
+
 # === Main Execution ===
 main() {
     # Initialize
     set_theme
     validate_environment
+    
+    # If no command provided, show interactive menu
+    if [[ $# -eq 0 ]]; then
+        show_interactive_menu
+        return
+    fi
     
     local cmd="${1:-help}"
     shift || true
@@ -582,22 +659,23 @@ main() {
         dashboard) dashboard ;;
         config)    show_config ;;
         help)      show_help ;;
+        menu)      show_interactive_menu ;;
         version)   echo "Notes CLI v$VERSION" ;;
         *)
             # Try to run as plugin
             local plugin_script="$PLUGINS_DIR/${cmd}.sh"
             if [[ -x "$plugin_script" ]]; then
                 "$plugin_script" "$@"
-            elif [[ -f "$plugin_script" ]]; then
+                elif [[ -f "$plugin_script" ]]; then
                 bash "$plugin_script" "$@"
             else
                 error "Unknown command: $cmd"
                 echo -e "Try: ${YELLOW}notes help${RESET} for available commands."
                 exit 1
             fi
-            ;;
+        ;;
     esac
 }
 
 # Run main function with all arguments
-main "$@" 
+main "$@"
