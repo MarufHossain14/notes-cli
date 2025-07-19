@@ -1,294 +1,253 @@
+<p align="center">
+  <img src="public/demo1.png" alt="Notes CLI Demo" width="700">
+</p>
 # 📝 Notes CLI
 
-A powerful, feature-rich terminal-based note-taking application with encryption, backup, sync, and plugin support. Perfect for personal use and sharing with friends.
+A powerful, extensible terminal-based note-taking application designed for developers and command-line enthusiasts. With built-in encryption, backup, Git sync, and plugin support, Notes CLI keeps your ideas organized and secure—right from your terminal.
+
+---
 
 ## ✨ Features
 
-### Core Features
+### 🧠 Core Functionality
 
-- **📝 Note Management**: Create, edit, delete, and organize notes by categories
-- **📓 Daily Journaling**: Automatic daily journal entries with timestamps
-- **🔍 Smart Search**: Search across all notes with keyword and tag filtering
-- **🎯 Fuzzy Search**: Interactive file selection with fzf (optional)
-- **🏷️ Tag System**: Use hashtags to organize and filter notes
-- **📤 Export**: Export notes to Markdown format
-- **💾 Auto Backup**: Automatic backup creation with retention management
-- **🔄 Git Sync**: Version control and cloud sync with Git
+* 🖊️ **Interactive Menu** — Launch with `notes` for a clean, guided interface
+* 📓 **Note Management** — Add, edit, delete, and categorize notes effortlessly
+* 🗓️ **Daily Journaling** — Auto-generates journal entries with timestamps
+* 🔍 **Global Search** — Keyword, fuzzy (`fzf`), and tag-based filtering
+* 📌 **Tag System** — Organize with `#hashtags`, filter with ease
+* 📄 **Markdown Export** — Convert notes to Markdown for external use
+* 💾 **Auto Backup** — Configurable backups with retention control
+* 🔄 **Git Integration** — Enable Git-based version control and cloud sync
 
-### Security Features
+### 🔐 Security & Privacy
 
-- **🔐 GPG Encryption**: Encrypt sensitive notes with GPG
-- **🔒 Private Directory**: Separate encrypted notes storage
-- **🛡️ Safe Filenames**: Automatic sanitization of file names
+* 🔒 **GPG Encryption** — Secure sensitive notes with strong encryption
+* 🛀 **Private Notes** — Encrypted files stored separately for peace of mind
+* ⚖️ **Safe Filenames** — Automatically sanitizes file names to prevent issues
 
-### Plugin System
+### 🔌 Plugin Support
 
-- **🌤️ Weather**: Current weather information
-- **⏰ Reminders**: Set and manage reminders
-- **🔋 System Status**: Battery, uptime, and disk usage
-- **🌐 Network**: Network connectivity and IP information
-- **📅 Calendar**: Date information and weekly view
-- **📊 Statistics**: Note statistics and analytics
-- **💾 Backup**: Manual backup operations
+Built-in and custom plugins for extra functionality:
 
-### Themes & Customization
+* ☀️ **Weather**: Live weather reports via `wttr.in`
+* ⏰ **Reminders**: Set and manage scheduled tasks
+* 🔋 **System Info**: Battery, uptime, network, calendar, and stats
+* 💾 **Backups**: On-demand backup control
 
-- **🎨 Multiple Themes**: Default, Solarized, Gruvbox, Dracula
-- **⚙️ Configurable**: Easy configuration via `~/.notesrc`
-- **🔧 Extensible**: Plugin system for custom functionality
+### 🎨 Theming & Customization
+
+* 🎨 Minimal, Solarized, Gruvbox, and Dracula themes
+* ⚙️ Configurable editor, GPG identity, note categories, and more
+* 🔧 Easily extend with your own shell-based plugins
+
+---
 
 ## 🚀 Quick Start
 
-### Prerequisites
+### ✅ Prerequisites
 
-- **Required**: bash, grep, sed, date, mkdir, cp, rm
-- **Optional**: fzf (fuzzy search), gpg (encryption), git (sync)
+* **Required**: `bash`, `grep`, `sed`, `date`, `mkdir`, `cp`, `rm`
+* **Optional but recommended**:
 
-### Installation
+  * [`fzf`](https://github.com/junegunn/fzf) — Fuzzy finder
+  * `gpg` — For encrypted notes
+  * `git` — For sync and version control
 
-#### Option 1: Automated Install (Recommended)
+### 📦 Installation
+
+#### Option 1: Automated Setup (Recommended)
 
 ```bash
-# Clone the repository
-git clone https://github.com/YOUR_USERNAME/notes-app.git
-cd notes-app
-
-# Run the installer
-./install.sh
+git clone https://github.com/MarufHossain14/notes-cli.git
+cd notes-cli
+bash install.sh
 ```
 
-#### Option 2: Manual Install
+#### Option 2: Manual Setup
 
 ```bash
-# Clone and setup
-git clone https://github.com/YOUR_USERNAME/notes-app.git
-cd notes-app
+git clone https://github.com/MarufHossain14/notes-cli.git
+cd notes-cli
 chmod +x notes.sh
 
-# Create symlink
+# Create a symlink
 mkdir -p ~/.local/bin
 ln -sf "$PWD/notes.sh" ~/.local/bin/notes
 
-# Add to PATH (add to ~/.bashrc or ~/.zshrc)
-export PATH="$HOME/.local/bin:$PATH"
+# Add to PATH (if needed)
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
+source ~/.bashrc
 
-# Copy configuration
+# Copy default configuration
 cp .notesrc ~/.notesrc
 ```
 
-### First Time Setup
+---
 
-1. **Restart your terminal** or run `source ~/.bashrc`
+## 🔧 Initial Configuration
 
-2. **Configure your settings**:
-
-   ```bash
-   nano ~/.notesrc
-   ```
-
-3. **Set up GPG for encryption** (optional):
+1. Restart terminal or `source ~/.bashrc`
+2. Run `notes help` to test installation
+3. Launch the app with `notes`
+4. Configure via `notes config` or edit `~/.notesrc` directly
+5. ✨ (Optional) Generate GPG key:
 
    ```bash
    gpg --full-generate-key
-   # Add your GPG email to ~/.notesrc
    ```
+6. 🔄 (Optional) Set up Git sync:
 
-4. **Configure Git sync** (optional):
    ```bash
    cd ~/notes
+   git init
    git remote add origin <your-repo-url>
    ```
 
-## 📖 Usage
+---
 
-### Basic Commands
+## 🛠️ Usage Overview
+
+### 🔍 Interactive Mode (Recommended)
 
 ```bash
-notes add          # Add a new note
-notes list         # List notes in a category
-notes journal      # Write today's journal
-notes search       # Search all notes
-notes help         # Show help
+notes
 ```
 
-### Advanced Commands
+A menu-driven interface where you can:
+
+* `add` — Add a new note
+* `journal` — Write today's journal
+* `list` — View notes by category
+* `search` — Search notes
+* `dashboard` — Daily summary
+* `q` — Quit the app
+
+### 🔢 Command Shortcuts
 
 ```bash
-notes fuzzy        # Interactive file selection
-notes encrypt      # Create encrypted note
-notes decrypt      # View encrypted note
-notes sync         # Sync to Git
-notes dashboard    # Show daily summary
-notes config       # Show configuration
+notes add        # Add a new note
+notes list       # List notes
+notes journal    # Journal entry
+notes search     # Keyword search
+notes fuzzy      # Fuzzy finder
+notes encrypt    # Encrypted note
+notes decrypt    # Decrypt note
+notes sync       # Git sync
+notes export     # Export to Markdown
+notes backups    # View backups
+notes config     # Show config
 ```
 
-### Examples
+---
 
-#### Adding Notes
+## 🔖 Examples
+
+### 📂 Add a Note
 
 ```bash
-# Add a work note
 notes add
-# Choose "Work" category and write your note
-
-# Add to today's journal
-notes journal
-# Write your daily thoughts
 ```
 
-#### Searching
+### 🔍 Search Notes
 
 ```bash
-# Search for "meeting" in all notes
 notes search meeting
-
-# Search for notes with #work tag
-notes tag #work
-
-# Interactive fuzzy search
+notes tag #project
 notes fuzzy
 ```
 
-#### Encryption
+### 🔒 Secure a Note
 
 ```bash
-# Create an encrypted note
 notes encrypt
-# Enter title and content
-
-# View encrypted notes
-notes decrypt
 ```
 
-#### Sync
+---
+
+## ⚙️ Configuration File: `~/.notesrc`
 
 ```bash
-# Sync all notes to Git
-notes sync
-
-# Check sync status
-notes dashboard
-```
-
-## ⚙️ Configuration
-
-Edit `~/.notesrc` to customize your setup:
-
-```bash
-# Theme options: default, solarized, gruvbox, dracula
-THEME="default"
-
-# Your preferred editor
+THEME="gruvbox"
 EDITOR="nano"
-
-# Notes directory
 NOTES_DIR="$HOME/notes"
-
-# GPG email for encryption
 GPG_USER="your-email@example.com"
-
-# Auto sync after operations
 AUTO_SYNC=false
-
-# Backup retention (days)
 BACKUP_RETENTION_DAYS=7
+DEFAULT_CATEGORIES=("Work" "Personal" "Journal" "Ideas" "Tasks")
 ```
+
+---
 
 ## 🔌 Plugins
 
-### Built-in Plugins
-
-- **weather**: Current weather information
-- **reminder**: Set and manage reminders
-- **battery**: System status and battery info
-- **network**: Network connectivity status
-- **calendar**: Date and calendar information
-- **stats**: Note statistics and analytics
-- **backup**: Manual backup operations
-
-### Using Plugins
+### ▶️ Run Built-in Plugins
 
 ```bash
-# Run all plugins
-notes plugins
-
-# Run specific plugin
-notes weather
-notes reminder
-notes stats
+notes plugins      # All plugins
+notes weather      # Weather info
+notes reminder     # Reminders
+notes stats        # Statistics
 ```
 
-### Creating Custom Plugins
+### 💭 Add Your Own Plugin
 
-Create `.sh` files in `.notes_plugins/` directory:
+Add a `.sh` file in `~/.notes_plugins/`:
 
 ```bash
 #!/usr/bin/env bash
-# My custom plugin
-echo "🔧 Custom Plugin:"
-echo "  Hello from my plugin!"
+echo "📋 Hello from my plugin!"
 ```
 
-## 📁 File Structure
+---
+
+## 🗂️ File Structure
 
 ```
-~/
-├── notes/                 # Your notes directory
-│   ├── work.txt          # Work notes
-│   ├── personal.txt      # Personal notes
-│   ├── journal-2024-01-15.txt  # Daily journals
-│   ├── private/          # Encrypted notes
-│   └── backups/          # Manual backups
-├── .notesrc              # Configuration file
-└── .local/bin/notes      # Executable symlink
+~/notes/
+├── work.txt
+├── personal.txt
+├── journal-YYYY-MM-DD.txt
+├── private/           # Encrypted notes
+├── backups/           # Backup copies
+~/.notesrc             # Config file
+~/.local/bin/notes     # Executable
 ```
 
-## 🔧 Troubleshooting
+---
 
-### Common Issues
+## 🧰 Troubleshooting
 
-**"Command not found: notes"**
+| Issue                   | Fix                                                                 |
+| ----------------------- | ------------------------------------------------------------------- |
+| `command not found`     | Ensure `~/.local/bin` is in your `$PATH`                            |
+| `fzf not found`         | Install: `sudo apt install fzf` or `brew install fzf`               |
+| `GPG encryption failed` | Run: `gpg --full-generate-key` and check `GPG_USER` in `~/.notesrc` |
+| `Git sync not working`  | Run `git init` and add a remote in your notes folder                |
 
-- Ensure `~/.local/bin` is in your PATH
-- Restart your terminal or run `source ~/.bashrc`
-
-**"fzf not found"**
-
-- Install fzf: `sudo apt install fzf` (Ubuntu) or `brew install fzf` (macOS)
-
-**"GPG encryption failed"**
-
-- Generate a GPG key: `gpg --full-generate-key`
-- Set GPG_USER in `~/.notesrc`
-
-**"Git sync not working"**
-
-- Initialize Git: `cd ~/notes && git init`
-- Add remote: `git remote add origin <your-repo-url>`
-
-### Getting Help
-
-```bash
-notes help          # Show command help
-notes config        # Show current configuration
-notes version       # Show version information
-```
+---
 
 ## 🤝 Contributing
 
+We welcome contributions!
+
 1. Fork the repository
 2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
+3. Write and test your changes
+4. Submit a pull request
+
+---
 
 ## 📄 License
 
-This project is open source and available under the [MIT License](LICENSE).
+This project is licensed under the [MIT License](LICENSE).
+
+---
 
 ## 🙏 Acknowledgments
 
-- Built with bash scripting
-- Uses [fzf](https://github.com/junegunn/fzf) for fuzzy search
-- Weather data from [wttr.in](https://wttr.in)
-- Inspired by various CLI note-taking tools
+* Built with Bash
+* Fuzzy search via [`fzf`](https://github.com/junegunn/fzf)
+* Weather data from [wttr.in](https://wttr.in)
+* Inspired by minimal, powerful CLI tooling
+* Thanks to contributors and users for feedback!

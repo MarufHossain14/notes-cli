@@ -6,51 +6,79 @@ Solutions for common installation and usage issues.
 
 ## 🚨 Installation Issues
 
+### **Error: Command not found after installation**
+
+**Problem:** The `notes` command is not in your PATH.
+
+**Solutions:**
+
+```bash
+# Check if the symlink exists
+ls -la ~/.local/bin/notes
+
+# If missing, recreate the symlink
+ln -sf /path/to/notes-cli/notes.sh ~/.local/bin/notes
+
+# Add to PATH if not already there
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
+source ~/.bashrc
+
+# Test
+notes help
+```
+
+### **Error: Colors showing as escape sequences (like \e[32m)**
+
+**Problem:** Terminal doesn't support color codes or script has wrong shebang.
+
+**Solutions:**
+
+```bash
+# Check bash path
+which bash
+
+# Update shebang if needed (edit first line of notes.sh)
+#!/usr/bin/bash  # or whatever path 'which bash' shows
+
+# Make executable
+chmod +x notes.sh
+
+# Test
+bash notes.sh help
+```
+
 ### **Error: `/usr/bin/env: 'bash\r': No such file or directory`**
 
 **Problem:** Windows line endings (CRLF) instead of Unix line endings (LF).
 
 **Solutions:**
 
-#### Option 1: Fix in WSL/Linux (Recommended)
+#### Option 1: Fix line endings in WSL/Linux (Recommended)
 
 ```bash
-# Remove Windows line endings from all scripts
-sed -i 's/\r$//' *.sh
-sed -i 's/\r$//' .notes_plugins/*.sh
+# Convert line endings
+sed -i 's/\r$//' install.sh
+sed -i 's/\r$//' notes.sh
 
-# Make scripts executable
-chmod +x *.sh
-chmod +x .notes_plugins/*.sh
+# Make executable
+chmod +x install.sh notes.sh
 
 # Try installation again
 bash install.sh
 ```
 
-#### Option 2: Fix in Git Bash
+#### Option 2: Use PowerShell to fix line endings
 
-```bash
-# Configure Git to handle line endings
-git config core.autocrlf false
+```powershell
+# In PowerShell (Windows)
+(Get-Content install.sh -Raw) -replace "`r`n", "`n" | Set-Content install.sh -NoNewline
+(Get-Content notes.sh -Raw) -replace "`r`n", "`n" | Set-Content notes.sh -NoNewline
+```
+
 git add .
 git commit -m "Fix line endings"
-```
 
-#### Option 2: Use the clean installer
-
-```bash
-# If the main installer fails, use the simplified version
-bash install_clean.sh
-```
-
-#### Option 3: Fix in Git Bash
-
-```bash
-# Configure Git to handle line endings
-git config core.autocrlf false
-git add .
-git commit -m "Fix line endings"
-```
+````
 
 #### Option 4: Manual Fix
 
@@ -58,7 +86,7 @@ git commit -m "Fix line endings"
 # Use dos2unix (install if needed)
 dos2unix *.sh
 dos2unix .notes_plugins/*.sh
-```
+````
 
 ### **Error: `Permission denied`**
 

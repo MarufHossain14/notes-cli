@@ -8,45 +8,74 @@ Get up and running in 5 minutes!
 
 ```bash
 # 1. Clone the repository
-git clone <your-repo-url>
-cd notes-app
+git clone https://github.com/MarufHossain14/notes-cli.git
+cd notes-cli
 
 # 2. Run the installer
-./install.sh
+bash install.sh
 
 # 3. Restart your terminal or run:
 source ~/.bashrc  # or source ~/.zshrc on macOS
 
 # 4. Start using!
-notes help
+notes
 ```
 
 ---
 
-## 🎯 Essential Commands
+## 🎯 The Easiest Way to Use Notes CLI
 
-### **Add Your First Note**
+### **Interactive Menu (Recommended)**
+
+```bash
+notes
+```
+
+This opens a user-friendly menu where you can simply type:
+
+- `add` - Add a new note
+- `journal` - Today's journal entry
+- `list` - View your notes
+- `search` - Find notes
+- `help` - Show help
+- `q` - Quit
+
+### **Direct Commands**
+
+```bash
+notes add          # Add a new note
+notes journal      # Write today's journal
+notes list         # View notes by category
+notes search       # Search all notes
+notes help         # Show quick help
+```
+
+---
+
+## 🎯 Essential First Steps
+
+### **1. Add Your First Note**
 
 ```bash
 notes add
-# Choose a category and write your note
+# Choose a category (Work, Personal, etc.) and write your note
 ```
 
-### **Write Today's Journal**
+### **2. Write Today's Journal**
 
 ```bash
 notes journal
 # Write about your day
 ```
 
-### **Search Your Notes**
+### **3. Search Your Notes**
 
 ```bash
-notes search "meeting"
-# Find notes containing "meeting"
+notes search
+# Enter: "meeting" to find notes containing "meeting"
 ```
 
-### **See Your Dashboard**
+### **4. See Your Dashboard**
 
 ```bash
 notes dashboard

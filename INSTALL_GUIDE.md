@@ -5,9 +5,9 @@ Complete installation instructions for Windows, macOS, and Linux.
 ## 🚀 Quick Install (All Platforms)
 
 ```bash
-git clone <your-repo-url>
-cd notes-app
-./install.sh
+git clone https://github.com/MarufHossain14/notes-cli.git
+cd notes-cli
+bash install.sh
 ```
 
 ---
@@ -42,13 +42,15 @@ wsl --install
 # 2. Restart your computer
 
 # 3. Open WSL terminal and install Notes CLI
-git clone <your-repo-url>
-cd notes-app
-./install.sh
+git clone https://github.com/MarufHossain14/notes-cli.git
+cd notes-cli
+bash install.sh
 
-# 4. Restart terminal or run:
-source ~/.bashrc
+# 4. Test the installation
+notes help
 ```
+
+````
 
 #### Option 2: Git Bash
 
@@ -62,7 +64,7 @@ cd notes-app
 ./install.sh
 
 # 3. Restart Git Bash
-```
+````
 
 #### Option 3: PowerShell (Limited Support)
 
